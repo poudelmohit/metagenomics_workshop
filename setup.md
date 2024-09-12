@@ -24,8 +24,7 @@
     conda install bioconda::kraken-biom -y
     conda install bioconda::checkm-genome -y
 
-'''
-
+##
     bash /home/mp067823/anaconda3/envs/metagenome/opt/krona/updateTaxonomy.sh
     cd software                        
     wget ftp://ftp.ncbi.nih.gov/pub/taxonomy/taxdump.tar.gz
@@ -35,10 +34,7 @@
     rm *dmp readme.txt taxdump.tar.gz gc.prt
     cd ..
 
-'''
-
-'''
-
+#### installing R packages:
     R
 
     install.packages("ggplot2")
@@ -47,11 +43,9 @@
         install.packages("BiocManager")
 
     BiocManager::install("phyloseq")
-    
-'''
+
 
 # downloadig data:
-'''
     
     mkdir data && cd $_
     wget https://zenodo.org/records/7010950/files/dc_workshop.zip
@@ -59,9 +53,8 @@
 
     unzip dc_workshop.zip
     ls dc_workshop/data
-'''
 
-cd ..
+
 
 
 
