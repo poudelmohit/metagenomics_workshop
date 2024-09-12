@@ -1,4 +1,3 @@
-# Downloadig data first:
 
 
 # Getting softwares ready:
