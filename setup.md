@@ -45,7 +45,7 @@
     BiocManager::install("phyloseq")
 
 
-# downloadig data:
+# downloading data:
     
     mkdir data && cd $_
     wget https://zenodo.org/records/7010950/files/dc_workshop.zip
