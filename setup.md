@@ -25,6 +25,7 @@
     conda install bioconda::checkm-genome -y
 
 '''
+
     bash /home/mp067823/anaconda3/envs/metagenome/opt/krona/updateTaxonomy.sh
     cd software                        
     wget ftp://ftp.ncbi.nih.gov/pub/taxonomy/taxdump.tar.gz
@@ -33,6 +34,7 @@
     cp names.dmp nodes.dmp delnodes.dmp merged.dmp ./.taxonkit
     rm *dmp readme.txt taxdump.tar.gz gc.prt
     cd ..
+
 '''
 
 '''
@@ -45,6 +47,7 @@
         install.packages("BiocManager")
 
     BiocManager::install("phyloseq")
+    
 '''
 
 # downloadig data:
@@ -58,7 +61,7 @@
     ls dc_workshop/data
 '''
 
-
+cd ..
 
 
 
