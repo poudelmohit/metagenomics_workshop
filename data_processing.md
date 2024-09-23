@@ -1,15 +1,18 @@
-cd $metagenomics_tutorial
+    cd $metagenomics_tutorial
 
 ### unzipping raw reads:
 
    gunzip data/dc_workshop/data/untrimmed_fastq/*.gz
+
    ls data/dc_workshop/data/untrimmed_fastq
 
 ### checking the last read of JP4D_R1.fastq:
+
     tail -n 4 data/dc_workshop/data/untrimmed_fastq/JP4D_R1.fastq | head -n
 
 
-### activating conda env: 
+### activating conda environment: 
+
     conda env list
     conda activate metagenome
 
@@ -28,6 +31,7 @@ cd $metagenomics_tutorial
     cd ../fastqc_results && ls
     
 #### unizpping the fastqc results:
+
     for i in ls *.zip;do
     unzip $i;done
     ls -F
@@ -35,6 +39,7 @@ cd $metagenomics_tutorial
     less JC1A_R1_fastqc/summary.txt
 
 #### summarizing all summary into a docs:
+
     mkdir -p ../../docs
     cat */summary.txt > ../../docs/fastqc_summaries.txt
     cat ../../docs/fastqc_summaries.txt
@@ -42,6 +47,7 @@ cd $metagenomics_tutorial
 
 
 ### Trimming low quality reads:
+
     trimmomatic # just checking the parameters and options
     cd ../untrimmed_fastq # navigating to untrimmed files directory to trim unwanted reads
     ls
@@ -49,6 +55,7 @@ cd $metagenomics_tutorial
 
 
 #### trimming all files using for loop:
+
     for filename in *_R1.fastq.gz;do   
     r1=$filename
     r2=$(echo "$filename" | sed 's/_R1/_R2/')
@@ -66,6 +73,7 @@ cd $metagenomics_tutorial
     # Also, any trimmed reads with less than 35 bases left is discarded
 
 #### moving trimmed files to different directory:
+
     # currently, all trimmed files are inside untrimmed_fastq directory, which doesnot make sense.
     mkdir -p ../trimmed_files && mv ./trim*.gz ../trimmed_files/
     cd ../trimmed_files && ls
