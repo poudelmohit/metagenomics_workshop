@@ -33,9 +33,10 @@
 #### unizpping the fastqc results:
 
     for i in ls *.zip;do
-    unzip $i;done
-    ls -F
+        unzip $i
+    done
 
+    ls -F
     less JC1A_R1_fastqc/summary.txt
 
 #### summarizing all summary into a docs:
@@ -57,15 +58,15 @@
 #### trimming all files using for loop:
 
     for filename in *_R1.fastq.gz;do   
-    r1=$filename
-    r2=$(echo "$filename" | sed 's/_R1/_R2/')
-    trimmed_r1=$(echo "$r1" | sed 's/^/trimmed_'/)
-    trimmed_r2=$(echo "$r2" | sed 's/^/trimmed_'/)
-    failed_r1=$(echo "$r1" | sed 's/^/trim_failed_'/)
-    failed_r2=$(echo "$r2" | sed 's/^/trim_failed_'/)
+        r1=$filename
+        r2=$(echo "$filename" | sed 's/_R1/_R2/')
+        trimmed_r1=$(echo "$r1" | sed 's/^/trimmed_'/)
+        trimmed_r2=$(echo "$r2" | sed 's/^/trimmed_'/)
+        failed_r1=$(echo "$r1" | sed 's/^/trim_failed_'/)
+        failed_r2=$(echo "$r2" | sed 's/^/trim_failed_'/)
     
-    trimmomatic PE $r1 $r2 $trimmed_r1 $failed_r1 $trimmed_r2 \
-    $failed_r2 SLIDINGWINDOW:4:20 MINLEN:35 ILLUMINACLIP:TruSeq3-PE.fa:2:40:15
+        trimmomatic PE $r1 $r2 $trimmed_r1 $failed_r1 $trimmed_r2 \
+        $failed_r2 SLIDINGWINDOW:4:20 MINLEN:35 ILLUMINACLIP:TruSeq3-PE.fa:2:40:15
     done
 
     # Adapter sequences are saved in current directory in file TrueSeq3-PE.fa
@@ -79,6 +80,26 @@
     cd ../trimmed_files && ls
 
 ### Metagenomic assembly:
+    mkdir ../assembled_files
+
+    # assembling both samples using for loop:
+    for file in trimmed_*_R1.fastq.gz
+        do
+        r2=$(echo $file | sed 's/R1/R2/')
+        output_file=$(basename ${file} _R1.fastq.gz | sed 's/^trimmed_/assembly_/')
+        metaspades.py -1 $file -2 $r2 -o ../assembled_files/$output_file       
+    done
+
+    cd ../assembled_files && ls
+
+    ls ./assembly_JC1A
+    
+    # out of these many files, the contigs.fasta and scaffolds.fasta are the ones with assembly
+    # file with extension *.gfa holds information to visualize the assembly using programs like [Bandage](https://github.com/rrwick/Bandage)
+
+
+
+
 
 
    
