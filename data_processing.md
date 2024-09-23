@@ -80,22 +80,46 @@
     cd ../trimmed_files && ls
 
 ### Metagenomic assembly:
-    mkdir ../assembled_files
 
-    # assembling both samples using for loop:
-    for file in trimmed_*_R1.fastq.gz
-        do
-        r2=$(echo $file | sed 's/R1/R2/')
-        output_file=$(basename ${file} _R1.fastq.gz | sed 's/^trimmed_/assembly_/')
-        metaspades.py -1 $file -2 $r2 -o ../assembled_files/$output_file       
-    done
+    mkdir ../assembled_files
+    
+    # assembling both samples one by one:
+    
+    metaspades.py -1 trimmed_JC1A_R1.fastq.gz -2 trimmed_JC1A_R2.fastq.gz -o ../assembled_files/assembly_JC1A
+    metaspades.py -1 trimmed_JP4D_R1.fastq.gz -2 trimmed_JP4D_R2.fastq.gz -o ../assembled_files/assembly_JP4D
 
     cd ../assembled_files && ls
 
     ls ./assembly_JC1A
-    
+    ls ./assembly_JP4D/
+
     # out of these many files, the contigs.fasta and scaffolds.fasta are the ones with assembly
     # file with extension *.gfa holds information to visualize the assembly using programs like [Bandage](https://github.com/rrwick/Bandage)
+
+### Metagenomic binning:
+    
+#### for JC1A:
+    cd assembly_JC1A
+    mkdir MAXBIN/JC1A
+    run_MaxBin.pl -thread 8 -contig contigs.fasta -reads ../../trimmed_files/trimmed_JC1A_R1* -reads2 ../../trimmed_files/trimmed_JC1A_R2* -out MAXBIN/JC1A
+    # it didn't run because the medium of marker gene number <= 1. So, program stopped.
+
+#### for JP4D: 
+
+    cd assembly_JP4D
+    ls ../../trimmed_files
+    mkdir MAXBIN
+    run_MaxBin.pl -thread 8 -contig contigs.fasta -reads ../../trimmed_files/trimmed_JP4D_R1* -reads2 ../../trimmed_files/trimmed_JP4D_R2* -out MAXBIN/JP4D
+    ls MAXBIN
+
+##### checking binned summary and quality:
+    cat MAXBIN/JP4D.summary
+    
+    mkdir CHECM
+    checkm taxonomy_wf domain Bacteria -x fasta MAXBIN/ CHECKM/
+
+    # to save in a tsv format:
+    checkm qa CHECKM/Bacteria.ms CHECKM/ --file CHECKM/quality_JP4D.txv --tab_table -o 2
 
 
 
