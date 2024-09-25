@@ -14,6 +14,7 @@
     conda config --add channels conda-forge
 
     conda activate metagenome
+
     conda install bioconda::fastqc -y
     conda install bioconda::kraken2 -y
     conda install bioconda::trimmomatic -y
@@ -21,7 +22,9 @@
     conda install bioconda::maxbin2 -y
     conda install bioconda::spades -y
     conda install bioconda::kraken-biom -y
+    conda install bioconda::metaphlan -y  # as alternative to kraken
     conda install bioconda::checkm-genome -y
+    
 
 ##
     bash /home/mp067823/anaconda3/envs/metagenome/opt/krona/updateTaxonomy.sh
