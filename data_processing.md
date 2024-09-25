@@ -109,10 +109,12 @@
     cd assembly_JP4D
     ls ../../trimmed_files
     mkdir MAXBIN
-    run_MaxBin.pl -thread 8 -contig contigs.fasta -reads ../../trimmed_files/trimmed_JP4D_R1* -reads2 ../../trimmed_files/trimmed_JP4D_R2* -out MAXBIN/JP4D
+    run_MaxBin.pl -thread 8 -contig contigs.fasta \
+    -reads ../../trimmed_files/trimmed_JP4D_R1* -reads2 ../../trimmed_files/trimmed_JP4D_R2* -out MAXBIN/JP4D
     ls MAXBIN
 
 ##### checking binned summary and quality:
+
     cat MAXBIN/JP4D.summary
     
     mkdir CHECM
@@ -120,9 +122,27 @@
 
     # to save in a tsv format:
     checkm qa CHECKM/Bacteria.ms CHECKM/ --file CHECKM/quality_JP4D.txv --tab_table -o 2
+    
 
 
 
+### taxonomic assignment:
+
+    # will be using trimmed but unassembled fastq files for taxonomic assignment:
+    cd ../../trimmed_files
+    
+    mkdir ../taxonomy_files
+    
+    free -h
+    kraken2 --help
+
+    #installing kraken db (make sure you have ~100 GB of space for this):
+    kraken2-build --standard --threads 8 --db kraken_db
+
+    # searching against the created db:
+    kraken2 --db kraken_db --threads 8 --paired trimmed_JP4D_R1.fastq.gz trimmed_JP4D_R2.fastq.gz --output ../taxonomy_files/JP4D.kraken --report ../taxonomy_files/JP4D.report
+    ls
+    echo $KRAKEN_DEFAULT_DB
 
 
 
