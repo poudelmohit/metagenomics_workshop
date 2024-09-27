@@ -126,24 +126,100 @@
 
 
 
-### taxonomic assignment:
+### taxonomic assignment (trying with kraken2):
 
     # will be using trimmed but unassembled fastq files for taxonomic assignment:
-    cd ../../trimmed_files
+
+    cd $metagenomics_tutorial/data/dc_workshop/data/assembled_files && ls
     
+    ls assembly_JP4D
     mkdir ../taxonomy_files
     
-    free -h
-    kraken2 --help
 
     #installing kraken db (make sure you have ~100 GB of space for this):
-    kraken2-build --standard --threads 8 --db kraken_db
-
-    # searching against the created db:
-    kraken2 --db kraken_db --threads 8 --paired trimmed_JP4D_R1.fastq.gz trimmed_JP4D_R2.fastq.gz --output ../taxonomy_files/JP4D.kraken --report ../taxonomy_files/JP4D.report
-    ls
-    echo $KRAKEN_DEFAULT_DB
-
-
-
    
+    mkdir ../kraken2_db && cd $_
+    wget -c https://refdb.s3.climb.ac.uk/kraken2-microbial/hash.k2d 
+    # -c means continue to allow resuming without requiring to start over, incase download gets intruppted.
+    wget https://refdb.s3.climb.ac.uk/kraken2-microbial/opts.k2d
+    wget https://refdb.s3.climb.ac.uk/kraken2-microbial/taxo.k2d
+    
+    # searching against the created db:
+
+    cd ../trimmed_files/ && ls
+    kraken2 --db ../kraken2_db --threads 4 --paired trimmed_JP4D_R1.fastq.gz trimmed_JP4D_R2.fastq.gz --output ../taxonomy_files/JP4D.kraken --report ../taxonomy_files/JP4D.report
+    dmesg | grep -i kill
+    
+    ## It didn't work due to less RAM availablity (memory issue)
+    ## Deleting the unused kraken database: 
+    rm -r ../kraken2_db ../kraken_db
+    
+
+### taxonomic assignment with metaphlan (because Kraken2 db needs >100GB and is constantly failing):
+    
+    cd .. && ls
+    mkdir -p with_metaphlan/trimmed_raw_files
+    cp trimmed_files/trimmed_*.gz with_metaphlan/trimmed_raw_files
+    cd with_metaphlan/trimmed_raw_files && ls
+
+    gunzip *.gz
+    
+    cd .. && ls
+    
+#### working for JP4D sample first:
+
+    metaphlan trimmed_raw_files/trimmed_JP4D_R1.fastq,trimmed_raw_files/trimmed_JP4D_R2.fastq --bowtie2out JP4D_metagenome.bowtie2.b2 --nproc 7 --input_type fastq -o JP4D_profiled_metagenome.txt
+
+    cat JP4D_profiled_metagenome.txt
+
+    # Converting the output into taxonomy-based-profile:
+    sgb_to_gtdb_profile.py -i JP4D_profiled_metagenome.txt -o JP4D_gtdb.txt
+    cat JP4D_gtdb.txt
+
+#### similarly for JC1A samples:
+
+    metaphlan trimmed_raw_files/trimmed_JC1A_R1.fastq,trimmed_raw_files/trimmed_JC1A_R2.fastq --bowtie2out JC1A_metagenome.bowtie2.b2 --nproc 7 --input_type fastq -o JC1A_profiled_metagenome.txt
+
+    
+    cat JC1A_profiled_metagenome.txt
+    # No microbial species were detected.    
+
+
+### Interpreting the results:
+
+    Here, unclassified sequences are discarded as the way code is set up.
+    And then, out of the classified ones, all are of Bacterial domain (d stands for domain here)
+    Within bacteria, 2 phyla (p) are detected: Proteobacteria and bacteroidota
+
+    Similarly, o stands for order, g stands for genus, and s stands for species.
+
+### Visualizing with krona:
+
+#### for JP4D samples:
+    
+    metaphlan2krona.py --profile JP4D_profiled_metagenome.txt -k JP4D.krona.txt
+    ktImportText JP4D.krona.txt -o JP4D_krona.html
+
+    # saving the plot for use:
+    mkdir ../../results
+    cp JP4D_krona.html ../../results
+
+#### for JC1A samples (delete later as there was no detection of microbial samples in JC1A):
+    
+    metaphlan2krona.py --profile JC1A_profiled_metagenome.txt -k JC1A.krona.txt
+    ktImportText JC1A.krona.txt -o JC1A_krona.html
+
+    # saving the plot for use:
+    mkdir ../../results
+    cp JC1A_krona.html ../../results
+
+
+
+
+
+
+
+
+
+
+
