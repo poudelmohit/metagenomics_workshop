@@ -2,9 +2,9 @@
 
 ### unzipping raw reads:
 
-   gunzip data/dc_workshop/data/untrimmed_fastq/*.gz
+    gunzip data/dc_workshop/data/untrimmed_fastq/*.gz
 
-   ls data/dc_workshop/data/untrimmed_fastq
+    ls data/dc_workshop/data/untrimmed_fastq
 
 ### checking the last read of JP4D_R1.fastq:
 
