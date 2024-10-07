@@ -1,4 +1,7 @@
 data/raw_reads
 housekeeping.md
 tools/
+data/fastqc_*
 data/downloads
+data/trimmed_files
+
