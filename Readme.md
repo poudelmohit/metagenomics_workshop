@@ -32,6 +32,7 @@ For any questions or further details about the analysis, please contact [**Mohit
 [**Alavarado-Serrano LAB, Ohio Univesity**](https://alvarado-s.weebly.com)
 ![Logo](https://github.com/poudelmohit/portfolio/blob/main/assets/lablogo-small.png)
 
+## Additional Resources:
 paper to follow: https://elifesciences.org/articles/49816
 
 tutorial to follow: https://carpentries-lab.github.io/metagenomics-workshop/setup.html
