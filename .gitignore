@@ -4,4 +4,5 @@ tools/
 data/fastqc_*
 data/downloads
 data/trimmed_files
+data/assembled_files
 
