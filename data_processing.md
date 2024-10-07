@@ -123,8 +123,20 @@
     
 ### Metagenomic assembly:
 
-    mkdir ../assembled_files
+    mkdir ../assembled_files/
     
+    # zipping fasq files, because apparently metaspades work only with compressed files:
+    gzip trimmed_*_?.fastq 
+    
+    for r1 in trimmed_*_1.fastq.gz;do
+        r2=$(echo $r1 | sed 's/_1/_2/')
+        assembled=$(echo $r1 | sed 's/^[^_]*_//' | sed 's/_1.fastq.gz/_assembled/')
+        echo $assembled
+        metaspades -1 "$r1" -2 "$r2" -o ../assembled_files/$assembled
+    done
+
+metaspades.py -1 trimmed_ERR2143758_1.fastq -2 trimmed_ERR2143758_2.fastq -o ../assembled_files/assembly_temp
+
     # assembling both samples one by one:
     
     metaspades.py -1 trimmed_JC1A_R1.fastq.gz -2 trimmed_JC1A_R2.fastq.gz -o ../assembled_files/assembly_JC1A
