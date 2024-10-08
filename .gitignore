@@ -6,4 +6,5 @@ data/downloads
 data/trimmed_files
 data/assembled_files
 data/binned_files
+data/checkm_outputs
 
