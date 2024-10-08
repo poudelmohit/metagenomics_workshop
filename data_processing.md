@@ -60,7 +60,7 @@
     which kraken-biom
 
     
-## Quality control with fastqc:
+## Quality assesment with fastqc:
     
     fastqc -h
     cd raw_reads
@@ -78,7 +78,7 @@
     mkdir ../../results/initial_fastqc_reports && cp *.html ../../results/initial_fastqc_reports
     
 
-### Trimming low quality reads:
+## Trimming low quality reads:
     cd ../raw_reads && ls
     trimmomatic # just checking the parameters and options
 
@@ -107,7 +107,7 @@
     mkdir ../trimmed_files && mv ./trim*.fastq ../trimmed_files/
     ls ../trimmed_files
 
-### Rerunning fastqc to check quality of trimmed files:
+## Rerunning fastqc to check quality of trimmed files:
     cd ../trimmed_files
     for file in trimmed_*.fastq;do
     fastqc $file
@@ -121,7 +121,7 @@
     # Also, copying the fastqc reports to results folder:
     mkdir -p ../../results/post_trimming_fastqc_reports && cp ../fastqc_after_trimming/*.html $_
     
-### Metagenomic assembly:
+## Metagenomic assembly:
 
     mkdir ../assembled_files/
 
@@ -138,14 +138,40 @@
 
     cd ../assembled_files && ls
 
-    ls ./assembly_JC1A
-    ls ./assembly_JP4D/
+  ls ERR*58_assembled
 
     # out of these many files, the contigs.fasta and scaffolds.fasta are the ones with assembly
     # file with extension *.gfa holds information to visualize the assembly using programs like [Bandage](https://github.com/rrwick/Bandage)
 
-### Metagenomic binning:
+## Metagenomic binning:
+
+    # lets perform binning of all samples using a for loop:
+    # for that, I need contigs.fasta, trimmed reads and output files:
+
+    mkdir ../binned_files
+
+    for file in *_assembled;do
+        sample_id=$(echo "$file" | sed 's/_assembled//')
+        contigs="$file/contigs.fasta"
+        r1="../trimmed_files/trimmed_${sample_id}_1.fastq"
+        r2="../trimmed_files/trimmed_${sample_id}_2.fastq"
+        out_file="../binned_files/${sample_id}"
+        mkdir $out_file
+        run_MaxBin.pl -thread 8 -contig $contigs -reads $r1 -reads2 $r2 -out $out_file
+        # echo $sample_id
+        # echo $out_file
+        # echo $r1
+        # echo $r2
+        # echo $contigs
+    done
+ls ../binned_files
+
     
+  gunzip ../trimmed_files/*.gz
+  ls ../trimmed_files
+
+ls ../trimmed_files/trimmed_"$sample_id"_1.fastq.gz
+
 #### for JC1A:
     cd assembly_JC1A
     mkdir MAXBIN/JC1A
