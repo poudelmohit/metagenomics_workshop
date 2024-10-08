@@ -6,14 +6,15 @@
 
 ## downloading raw fastq files:
     
-    Though the originial research has 40 total raw fastq reads, I am using just 6 for now
+    Though the originial research has 40 total raw fastq reads, I am using just 6 (randomly) for now
     For that, First I will need SRA ids of the samples I intend to work with,
     Secondly, I need to download the files using those ids and a tool (described below):
     
 ### 1.Saving the SRA ids for the samples in a text file:
     
     touch data/sra_ids.txt
-    echo -e "ERS1949765\nERS1949772\nERS1949791\nERS1949788\nERS1949792\nERS1949793" >> data/sra_ids.txt
+
+    echo -e "ERR2143758\nERR2143759\nERR2143768\nERR2143767\nERR2143784\nERR2143785\nERR2143794\nERR2143795" > data/sra_ids.txt
     cat data/sra_ids.txt
 
 ### 2.Downloading files using fastq-dump:
@@ -32,7 +33,7 @@
 ## To Remeber:
     # Controls are the samples ending with 58 and 59
     # Unenriched samples are ending with 67 and 68
-    # Fertilized samples are ending with 69 and 70
+    # Fertilized samples are ending with 84, 85, 94 and 95
 
 
 ## Checking the last read of a control sample:
@@ -82,8 +83,11 @@
     cd ../raw_reads && ls
     trimmomatic # just checking the parameters and options
 
-#### trimming all files using for loop:
+    echo -e ">PrefixPE/1\nTACACTCTTTCCCTACACGACGCTCTTCCGATCT\n>PrefixPE/2\nGTGACTGGAGTTCAGACGTGTGCTCTTCCGATCT" > ../TruSeq3-PE.fa
+    # I obtained this file from the original data repository (zenodo) itself
 
+#### trimming all files using for loop:
+ls
     for filename in *_1.fastq;do   
         r1=$filename
         r2=$(echo "$filename" | sed 's/_1/_2/')
@@ -92,12 +96,12 @@
         failed_r1=$(echo "$r1" | sed 's/^/trim_failed_'/)
         failed_r2=$(echo "$r2" | sed 's/^/trim_failed_'/)
     
-        trimmomatic PE $r1 $r2 $trimmed_r1 $failed_r1 $trimmed_r2 \
-        $failed_r2 SLIDINGWINDOW:4:25 MINLEN:35 ILLUMINACLIP:../TruSeq3-PE.fa:2:40:15
+        trimmomatic PE $r1 $r2 $trimmed_r1 $failed_r1 $trimmed_r2 $failed_r2 SLIDINGWINDOW:4:25 MINLEN:35 ILLUMINACLIP:../TruSeq3-PE.fa:2:40:15
         
     done
+    
 
-    # Adapter sequences are saved in data directory in file TrueSeq3-PE.fa
+    # Adapter sequences (to trim) are saved in data directory in file TrueSeq3-PE.fa
     # Sliding window of 4 is used that removes bases if phred score is below 25
     # Also, any trimmed reads with less than 35 bases left is discarded
 
@@ -110,7 +114,7 @@
 ## Rerunning fastqc to check quality of trimmed files:
     cd ../trimmed_files
     for file in trimmed_*.fastq;do
-    fastqc $file
+        fastqc $file
     done
     
     # moving fastqc reports to different folder:
@@ -126,7 +130,7 @@
     mkdir ../assembled_files/
 
     # zipping fasq files, because apparently metaspades work only with compressed files:
-    gzip trimmed_*_?.fastq 
+    gzip trimmed_*_?.fastq
     
     for r1 in trimmed_*_1.fastq.gz;do
         r2=$(echo $r1 | sed 's/_1/_2/')
@@ -138,7 +142,8 @@
 
     cd ../assembled_files && ls
 
-  ls ERR*58_assembled
+    ls ERR*68_assembled
+    
 
     # out of these many files, the contigs.fasta and scaffolds.fasta are the ones with assembly
     # file with extension *.gfa holds information to visualize the assembly using programs like [Bandage](https://github.com/rrwick/Bandage)
@@ -147,8 +152,13 @@
 
     # lets perform binning of all samples using a for loop:
     # for that, I need contigs.fasta, trimmed reads and output files:
-
+    
+    gunzip ../trimmed_files/*.gz
+    
     mkdir ../binned_files
+
+
+
 
     for file in *_assembled;do
         sample_id=$(echo "$file" | sed 's/_assembled//')
@@ -164,41 +174,41 @@
         # echo $r2
         # echo $contigs
     done
-ls ../binned_files
-
-    
-  gunzip ../trimmed_files/*.gz
-  ls ../trimmed_files
-
-ls ../trimmed_files/trimmed_"$sample_id"_1.fastq.gz
-
-#### for JC1A:
-    cd assembly_JC1A
-    mkdir MAXBIN/JC1A
-    run_MaxBin.pl -thread 8 -contig contigs.fasta -reads ../../trimmed_files/trimmed_JC1A_R1* -reads2 ../../trimmed_files/trimmed_JC1A_R2* -out MAXBIN/JC1A
-    # it didn't run because the medium of marker gene number <= 1. So, program stopped.
-
-#### for JP4D: 
-
-    cd assembly_JP4D
-    ls ../../trimmed_files
-    mkdir MAXBIN
-    run_MaxBin.pl -thread 8 -contig contigs.fasta \
-    -reads ../../trimmed_files/trimmed_JP4D_R1* -reads2 ../../trimmed_files/trimmed_JP4D_R2* -out MAXBIN/JP4D
-    ls MAXBIN
-
-##### checking binned summary and quality:
-
-    cat MAXBIN/JP4D.summary
-    
-    mkdir CHECM
-    checkm taxonomy_wf domain Bacteria -x fasta MAXBIN/ CHECKM/
-
-    # to save in a tsv format:
-    checkm qa CHECKM/Bacteria.ms CHECKM/ --file CHECKM/quality_JP4D.txv --tab_table -o 2
-    
 
 
+    ls -lh binned_files/*.summary
+    ## At this point, I see summary of only 4 samples out of initial 8. 
+    ## It is because the number of marker genes is less than 1.
+
+    # lets move the binned fasta files into respective directory by creating subdirectories:
+        
+    cd binned_files
+
+    for file in ERR*;do
+        dir="${file%%.*}"
+        mkdir -p "$dir/"
+        mv "$file" "$dir/"
+    done
+
+### copying the summary files into results folder:
+find . -type f -iname "*.summary" -exec cp {} ../../results/summary_binning/ \;\
+ls -lh */*.fasta | wc -l
+
+### Checking the quality of the assembled genomes:    
+#### only 4 samples (that passed binning) has .fasta output. So:
+
+    passed_folders="ERR2143759 ERR2143767 ERR2143784 ERR2143785"
+    for folder in $passed_folders;do
+        mkdir -p "$folder"/checkm_outputs
+        checkm taxonomy_wf domain Bacteria -x fasta "$folder" "$folder"/checkm_outputs/
+    done
+
+    # here, due to insufficinet memory, I have specified the marker at the domain level, specific only for bacteria
+    # also mentioned that binned files are in fasta format in folder: binned_files
+    # the output will be saved in checkm_outputs
+
+
+# ####################################################
 
 ### taxonomic assignment (trying with kraken2):
 
