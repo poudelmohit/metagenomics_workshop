@@ -37,7 +37,7 @@
 
 
 ## Checking the last read of a control sample:
-    tail -n 4 raw_reads/ERR*58_?.fastq 
+    tail -n 4 raw_reads/ERR*58_?.fastq
 
 
 ## Installing tools in dedicated conda environment: 
@@ -129,9 +129,11 @@ ls
 
     mkdir ../assembled_files/
 
-    # zipping fasq files, because apparently metaspades work only with compressed files:
-    gzip trimmed_*_?.fastq
-    
+### zipping fasq files, because apparently metaspades work only with compressed files:
+    gzip trimmed_*_?.fastq  
+
+### for loop for assembly
+
     for r1 in trimmed_*_1.fastq.gz;do
         r2=$(echo $r1 | sed 's/_1/_2/')
         assembled=$(echo $r1 | sed 's/^[^_]*_//' | sed 's/_1.fastq.gz/_assembled/')
@@ -144,21 +146,17 @@ ls
 
     ls ERR*68_assembled
     
-
     # out of these many files, the contigs.fasta and scaffolds.fasta are the ones with assembly
     # file with extension *.gfa holds information to visualize the assembly using programs like [Bandage](https://github.com/rrwick/Bandage)
 
 ## Metagenomic binning:
 
-    # lets perform binning of all samples using a for loop:
+    # Binning of all samples using a for loop:
     # for that, I need contigs.fasta, trimmed reads and output files:
     
     gunzip ../trimmed_files/*.gz
     
     mkdir ../binned_files
-
-
-
 
     for file in *_assembled;do
         sample_id=$(echo "$file" | sed 's/_assembled//')
@@ -176,13 +174,14 @@ ls
     done
 
 
-    ls -lh binned_files/*.summary
-    ## At this point, I see summary of only 4 samples out of initial 8. 
-    ## It is because the number of marker genes is less than 1.
+    ls -lh ../binned_files/*.summary
+
+    ## At this point, I see summary of only 6 samples out of initial 8. 
+    ## It is because the number of marker genes is less than 1, in case of remaining 2 samples.
 
     # lets move the binned fasta files into respective directory by creating subdirectories:
         
-    cd binned_files
+    cd ../binned_files
 
     for file in ERR*;do
         dir="${file%%.*}"
@@ -190,14 +189,18 @@ ls
         mv "$file" "$dir/"
     done
 
+
 ### copying the summary files into results folder:
-find . -type f -iname "*.summary" -exec cp {} ../../results/summary_binning/ \;\
-ls -lh */*.fasta | wc -l
+    find . -type f -iname "*.summary" -exec cp {} ../../results/summary_binning/ \;
 
-### Checking the quality of the assembled genomes:    
-#### only 4 samples (that passed binning) has .fasta output. So:
+    ls -lh */*.fasta | wc -l
 
-    passed_folders="ERR2143759 ERR2143767 ERR2143784 ERR2143785"
+### Checking the quality of the assembled genomes
+
+#### only 6 samples (that passed binning) has .fasta output. So:
+
+    passed_folders="ERR2143758 ERR2143759 ERR2143767 ERR2143784 ERR2143785 ERR2143794 ERR2143795"
+
     for folder in $passed_folders;do
         mkdir -p "$folder"/checkm_outputs
         checkm taxonomy_wf domain Bacteria -x fasta "$folder" "$folder"/checkm_outputs/
@@ -241,16 +244,40 @@ ls -lh */*.fasta | wc -l
 
 ### taxonomic assignment with metaphlan (because Kraken2 db needs >100GB and is constantly failing):
     
-    cd .. && ls
-    mkdir -p with_metaphlan/trimmed_raw_files
-    cp trimmed_files/trimmed_*.gz with_metaphlan/trimmed_raw_files
-    cd with_metaphlan/trimmed_raw_files && ls
+    conda deactivate
+    conda create -n metaphlan -y
+    conda activate metaphlan
+    conda install metaphlan -y
 
-    gunzip *.gz
+    metaphlan --install --bowtie2db ../../../tools/tx_db
+
+    cd .. && ls
+    mkdir -p tx_assignment/trimmed_raw_files
+    cp trimmed_files/trimmed_*.fastq tx_assignment/trimmed_raw_files/
+    cd tx_assignment/trimmed_raw_files && ls
     
     cd .. && ls
     
-#### working for JP4D sample first:
+#### for loop for taxonomic assignment:
+
+    cd trimmed_raw_files
+
+    for file in trimmed_*_1.fastq; do
+        sample_id=$(basename "$file" _1.fastq | sed 's/trimmed_//')
+        reverse_read=$(echo "$file" | sed 's/_1/_2/')
+        
+        # echo "$sample_id"
+        # echo "$file"
+        # echo "$reverse_read"
+        
+        metaphlan "$file","$reverse_read" --bowtie2db ../../../tools/tx_db --bowtie2out ../"$sample_id".bowtie2.bz2 --nproc 7 --input_type fastq -o ../"$sample_id"_profiled_metagenome.txt
+    done
+
+    
+##########################################################
+
+
+metaphlan
 
     metaphlan trimmed_raw_files/trimmed_JP4D_R1.fastq,trimmed_raw_files/trimmed_JP4D_R2.fastq --bowtie2out JP4D_metagenome.bowtie2.b2 --nproc 7 --input_type fastq -o JP4D_profiled_metagenome.txt
 
