@@ -269,33 +269,25 @@ ls
         # echo "$sample_id"
         # echo "$file"
         # echo "$reverse_read"
-        
-        metaphlan "$file","$reverse_read" --bowtie2db ../../../tools/tx_db --bowtie2out ../"$sample_id".bowtie2.bz2 --nproc 7 --input_type fastq -o ../"$sample_id"_profiled_metagenome.txt
+    
+        metaphlan "$file","$reverse_read" --bowtie2db ../../../tools/tx_db/ --bowtie2out ../"$sample_id".bowtie2.bz2 --nproc 7 --input_type fastq -o ../"$sample_id"_profiled_metagenome.txt
     done
 
-    
-##########################################################
+    cd ..
 
+    cat ERR*795_*.txt
 
-metaphlan
+### Converting the output into taxonomy-based-profile:
 
-    metaphlan trimmed_raw_files/trimmed_JP4D_R1.fastq,trimmed_raw_files/trimmed_JP4D_R2.fastq --bowtie2out JP4D_metagenome.bowtie2.b2 --nproc 7 --input_type fastq -o JP4D_profiled_metagenome.txt
+    mkdir tx_profile
 
-    cat JP4D_profiled_metagenome.txt
-
-    # Converting the output into taxonomy-based-profile:
-    sgb_to_gtdb_profile.py -i JP4D_profiled_metagenome.txt -o JP4D_gtdb.txt
-    cat JP4D_gtdb.txt
-
-#### similarly for JC1A samples:
-
-    metaphlan trimmed_raw_files/trimmed_JC1A_R1.fastq,trimmed_raw_files/trimmed_JC1A_R2.fastq --bowtie2out JC1A_metagenome.bowtie2.b2 --nproc 7 --input_type fastq -o JC1A_profiled_metagenome.txt
-
-    
-    cat JC1A_profiled_metagenome.txt
-    # No microbial species were detected.    
-
-
+    for file in *_metagenome.txt;do
+        output_file=$(echo "$file" | sed s'/_profiled_metagenome/_gtdb/')
+        echo $output_file
+        echo "$file"
+        sgb_to_gtdb_profile.py -i "$file" -o tx_profile/"$output_file"
+    done
+ 
 ### Interpreting the results:
 
     Here, unclassified sequences are discarded as the way code is set up.
@@ -306,31 +298,34 @@ metaphlan
 
 ### Visualizing with krona:
 
-#### for JP4D samples:
-    
-    metaphlan2krona.py --profile JP4D_profiled_metagenome.txt -k JP4D.krona.txt
-    ktImportText JP4D.krona.txt -o JP4D_krona.html
+    mkdir krona_files/
 
-    # saving the plot for use:
+    for file in *_profiled_metagenome.txt;do
+        output=$(echo "$file" | sed s'/profiled_metagenome/krona/') 
+        metaphlan2krona.py --profile "$file" -k ./krona_files/"$output"
+    done
+
+    ls krona_files
+    cat krona_files/ERR2143759_krona.txt
+
+### Converting to graphical format (html)
+
+    conda activate metagenome
+    
+    cd krona_files
+    
+    for file in *.txt;do
+        output=$(echo "$file" | sed 's/.txt/.html/')
+        ktImportText "$file" -o "$output"
+    done
+
+## saving the files in results folder:
+    
+    mkdir ../../../results/abundance_graphs && cp *.html $_
+    
     mkdir ../../results
     cp JP4D_krona.html ../../results
 
-#### for JC1A samples (delete later as there was no detection of microbial samples in JC1A):
-    
-    metaphlan2krona.py --profile JC1A_profiled_metagenome.txt -k JC1A.krona.txt
-    ktImportText JC1A.krona.txt -o JC1A_krona.html
+# Next Step ?
 
-    # saving the plot for use:
-    mkdir ../../results
-    cp JC1A_krona.html ../../results
-
-
-
-
-
-
-
-
-
-
-
+### alpha and beta Diversity Calculation !!
