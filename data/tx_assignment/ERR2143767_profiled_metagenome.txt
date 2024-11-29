@@ -1,0 +1,13 @@
+#mpa_vJun23_CHOCOPhlAnSGB_202403
+#/home/mp067823/anaconda3/envs/metaphlan/bin/metaphlan trimmed_ERR2143767_1.fastq,trimmed_ERR2143767_2.fastq --bowtie2db ../../../tools/tx_db/ --bowtie2out ../ERR2143767.bowtie2.bz2 --nproc 7 --input_type fastq -o ../ERR2143767_profiled_metagenome.txt --biom ../ERR2143767.biom
+#553368 reads processed
+#SampleID	Metaphlan_Analysis
+#clade_name	NCBI_tax_id	relative_abundance	additional_species
+k__Bacteria	2	100.0	
+k__Bacteria|p__Bacteroidota	2|976	100.0	
+k__Bacteria|p__Bacteroidota|c__CFGB45935	2|976|	100.0	
+k__Bacteria|p__Bacteroidota|c__CFGB45935|o__OFGB45935	2|976||	100.0	
+k__Bacteria|p__Bacteroidota|c__CFGB45935|o__OFGB45935|f__FGB45935	2|976|||	100.0	
+k__Bacteria|p__Bacteroidota|c__CFGB45935|o__OFGB45935|f__FGB45935|g__GGB56609	2|976||||	100.0	
+k__Bacteria|p__Bacteroidota|c__CFGB45935|o__OFGB45935|f__FGB45935|g__GGB56609|s__GGB56609_SGB78025	2|976|||||	100.0	
+k__Bacteria|p__Bacteroidota|c__CFGB45935|o__OFGB45935|f__FGB45935|g__GGB56609|s__GGB56609_SGB78025|t__SGB78025	2|976||||||	100.0	

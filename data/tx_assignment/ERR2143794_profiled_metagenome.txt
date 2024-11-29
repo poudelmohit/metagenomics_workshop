@@ -1,0 +1,20 @@
+#mpa_vJun23_CHOCOPhlAnSGB_202403
+#/home/mp067823/anaconda3/envs/metaphlan/bin/metaphlan trimmed_ERR2143794_1.fastq,trimmed_ERR2143794_2.fastq --bowtie2db ../../../tools/tx_db/ --bowtie2out ../ERR2143794.bowtie2.bz2 --nproc 7 --input_type fastq -o ../ERR2143794_profiled_metagenome.txt --biom ../ERR2143794.biom
+#1839953 reads processed
+#SampleID	Metaphlan_Analysis
+#clade_name	NCBI_tax_id	relative_abundance	additional_species
+k__Bacteria	2	100.0	
+k__Bacteria|p__Bacteroidota	2|976	85.22336	
+k__Bacteria|p__Proteobacteria	2|1224	14.77664	
+k__Bacteria|p__Bacteroidota|c__CFGB45935	2|976|	85.22336	
+k__Bacteria|p__Proteobacteria|c__Alphaproteobacteria	2|1224|28211	14.77664	
+k__Bacteria|p__Bacteroidota|c__CFGB45935|o__OFGB45935	2|976||	85.22336	
+k__Bacteria|p__Proteobacteria|c__Alphaproteobacteria|o__Rhodobacterales	2|1224|28211|204455	14.77664	
+k__Bacteria|p__Bacteroidota|c__CFGB45935|o__OFGB45935|f__FGB45935	2|976|||	85.22336	
+k__Bacteria|p__Proteobacteria|c__Alphaproteobacteria|o__Rhodobacterales|f__Rhodobacteraceae	2|1224|28211|204455|31989	14.77664	
+k__Bacteria|p__Bacteroidota|c__CFGB45935|o__OFGB45935|f__FGB45935|g__GGB56609	2|976||||	85.22336	
+k__Bacteria|p__Proteobacteria|c__Alphaproteobacteria|o__Rhodobacterales|f__Rhodobacteraceae|g__Phycocomes	2|1224|28211|204455|31989|2873978	14.77664	
+k__Bacteria|p__Bacteroidota|c__CFGB45935|o__OFGB45935|f__FGB45935|g__GGB56609|s__GGB56609_SGB78025	2|976|||||	85.22336	
+k__Bacteria|p__Proteobacteria|c__Alphaproteobacteria|o__Rhodobacterales|f__Rhodobacteraceae|g__Phycocomes|s__Phycocomes_zhengii	2|1224|28211|204455|31989|2873978|2056810	14.77664	
+k__Bacteria|p__Bacteroidota|c__CFGB45935|o__OFGB45935|f__FGB45935|g__GGB56609|s__GGB56609_SGB78025|t__SGB78025	2|976||||||	85.22336	
+k__Bacteria|p__Proteobacteria|c__Alphaproteobacteria|o__Rhodobacterales|f__Rhodobacteraceae|g__Phycocomes|s__Phycocomes_zhengii|t__SGB31485	2|1224|28211|204455|31989|2873978|2056810|	14.77664	

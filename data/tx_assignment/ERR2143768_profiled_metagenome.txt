@@ -1,0 +1,13 @@
+#mpa_vJun23_CHOCOPhlAnSGB_202403
+#/home/mp067823/anaconda3/envs/metaphlan/bin/metaphlan trimmed_ERR2143768_1.fastq,trimmed_ERR2143768_2.fastq --bowtie2db ../../../tools/tx_db/ --bowtie2out ../ERR2143768.bowtie2.bz2 --nproc 7 --input_type fastq -o ../ERR2143768_profiled_metagenome.txt --biom ../ERR2143768.biom
+#15875 reads processed
+#SampleID	Metaphlan_Analysis
+#clade_name	NCBI_tax_id	relative_abundance	additional_species
+k__Bacteria	2	100.0	
+k__Bacteria|p__Proteobacteria	2|1224	100.0	
+k__Bacteria|p__Proteobacteria|c__Deltaproteobacteria	2|1224|28221	100.0	
+k__Bacteria|p__Proteobacteria|c__Deltaproteobacteria|o__Desulfovibrionales	2|1224|28221|213115	100.0	
+k__Bacteria|p__Proteobacteria|c__Deltaproteobacteria|o__Desulfovibrionales|f__Desulfovibrionaceae	2|1224|28221|213115|194924	100.0	
+k__Bacteria|p__Proteobacteria|c__Deltaproteobacteria|o__Desulfovibrionales|f__Desulfovibrionaceae|g__Desulfovibrio	2|1224|28221|213115|194924|872	100.0	
+k__Bacteria|p__Proteobacteria|c__Deltaproteobacteria|o__Desulfovibrionales|f__Desulfovibrionaceae|g__Desulfovibrio|s__Desulfovibrio_subterraneus	2|1224|28221|213115|194924|872|2718620	100.0	
+k__Bacteria|p__Proteobacteria|c__Deltaproteobacteria|o__Desulfovibrionales|f__Desulfovibrionaceae|g__Desulfovibrio|s__Desulfovibrio_subterraneus|t__SGB85556	2|1224|28221|213115|194924|872|2718620|	100.0	
