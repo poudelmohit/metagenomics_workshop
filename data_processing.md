@@ -1,4 +1,4 @@
-## Creating a directories to work on the project:
+## Creating a directory to work on the project:
     by moving to the directory for this project (in my case 'metagenomics_workshop'):
 
     # creating directories:
@@ -6,14 +6,14 @@
 
 ## downloading raw fastq files:
     
-    Though the originial research has 40 total raw fastq reads, I am using just 6 (randomly) for now
+    Though the originial research has 40 total raw fastq reads, I am using just 8 (randomly) for now
     For that, First I will need SRA ids of the samples I intend to work with,
     Secondly, I need to download the files using those ids and a tool (described below):
     
 ### 1.Saving the SRA ids for the samples in a text file:
     
     touch data/sra_ids.txt
-
+    
     echo -e "ERR2143758\nERR2143759\nERR2143768\nERR2143767\nERR2143784\nERR2143785\nERR2143794\nERR2143795" > data/sra_ids.txt
     cat data/sra_ids.txt
 
@@ -35,10 +35,8 @@
     # Unenriched samples are ending with 67 and 68
     # Fertilized samples are ending with 84, 85, 94 and 95
 
-
 ## Checking the last read of a control sample:
     tail -n 4 raw_reads/ERR*58_?.fastq
-
 
 ## Installing tools in dedicated conda environment: 
 
@@ -56,11 +54,18 @@
     which run_MaxBin.pl # for maxbin
     which spades
     which ktImportText # for krona
-    which spades
     which checkm
     which kraken-biom
 
+## Additional Setup:
     
+    bash ~/anaconda3/envs/metagenome/opt/krona/updateTaxonomy.sh 
+    cd ~/extra/metagenomics_workshop/tools/ && ls                          
+    wget ftp://ftp.ncbi.nih.gov/pub/taxonomy/taxdump.tar.gz
+    tar -xzf taxdump.tar.gz
+    mkdir ~/.taxonkit && cp names.dmp nodes.dmp delnodes.dmp merged.dmp $_
+    rm *dmp readme.txt taxdump.tar.gz gc.prt
+
 ## Quality assesment with fastqc:
     
     fastqc -h
@@ -78,8 +83,8 @@
     # At this point, I am copying the html reports to results folder:
     mkdir ../../results/initial_fastqc_reports && cp *.html ../../results/initial_fastqc_reports
     
-
 ## Trimming low quality reads:
+
     cd ../raw_reads && ls
     trimmomatic # just checking the parameters and options
 
@@ -87,7 +92,7 @@
     # I obtained this file from the original data repository (zenodo) itself
 
 #### trimming all files using for loop:
-ls
+
     for filename in *_1.fastq;do   
         r1=$filename
         r2=$(echo "$filename" | sed 's/_1/_2/')
@@ -97,10 +102,8 @@ ls
         failed_r2=$(echo "$r2" | sed 's/^/trim_failed_'/)
     
         trimmomatic PE $r1 $r2 $trimmed_r1 $failed_r1 $trimmed_r2 $failed_r2 SLIDINGWINDOW:4:25 MINLEN:35 ILLUMINACLIP:../TruSeq3-PE.fa:2:40:15
-        
     done
     
-
     # Adapter sequences (to trim) are saved in data directory in file TrueSeq3-PE.fa
     # Sliding window of 4 is used that removes bases if phred score is below 25
     # Also, any trimmed reads with less than 35 bases left is discarded
@@ -128,9 +131,11 @@ ls
 ## Metagenomic assembly:
 
     mkdir ../assembled_files/
+    cd ../trimmed_files && ls
 
-### zipping fasq files, because apparently metaspades work only with compressed files:
-    gzip trimmed_*_?.fastq  
+### zipping fastq files, because apparently metaspades work only with compressed files:
+    gzip trimmed_*_?.fastq
+    
 
 ### for loop for assembly
 
@@ -140,7 +145,6 @@ ls
         echo $assembled
         metaspades -1 "$r1" -2 "$r2" -o ../assembled_files/$assembled
     done
-
 
     cd ../assembled_files && ls
 
@@ -152,35 +156,33 @@ ls
 ## Metagenomic binning:
 
     # Binning of all samples using a for loop:
-    # for that, I need contigs.fasta, trimmed reads and output files:
+    # for that, I need contigs.fasta (from assembly) and trimmed reads:
     
     gunzip ../trimmed_files/*.gz
     
     mkdir ../binned_files
-
+    
     for file in *_assembled;do
+       
         sample_id=$(echo "$file" | sed 's/_assembled//')
         contigs="$file/contigs.fasta"
         r1="../trimmed_files/trimmed_${sample_id}_1.fastq"
         r2="../trimmed_files/trimmed_${sample_id}_2.fastq"
         out_file="../binned_files/${sample_id}"
-        mkdir $out_file
-        run_MaxBin.pl -thread 8 -contig $contigs -reads $r1 -reads2 $r2 -out $out_file
-        # echo $sample_id
-        # echo $out_file
-        # echo $r1
-        # echo $r2
-        # echo $contigs
+       
+        mkdir -p $out_file
+       
+        run_MaxBin.pl -thread 8 -contig $contigs -reads $r1 -reads2 $r2 -out $out_file >> ../binned_files/binning.log 2>&1
+    
+        echo "Processed sample: $sample_id, output saved to $out_file" >> ../binned_files/binning.log
     done
-
 
     ls -lh ../binned_files/*.summary
 
     ## At this point, I see summary of only 6 samples out of initial 8. 
-    ## It is because the number of marker genes is less than 1, in case of remaining 2 samples.
+    ## It is because, for the remaining 2 samples, the number of marker genes is less than 1, read more at ../binned_files/binning.log
 
-    # lets move the binned fasta files into respective directory by creating subdirectories:
-        
+    # lets move the binned fasta files into respective directory by creating subdirectories: 
     cd ../binned_files
 
     for file in ERR*;do
@@ -189,8 +191,8 @@ ls
         mv "$file" "$dir/"
     done
 
-
 ### copying the summary files into results folder:
+    mkdir -p ../../results/summary_binning/
     find . -type f -iname "*.summary" -exec cp {} ../../results/summary_binning/ \;
 
     ls -lh */*.fasta | wc -l
@@ -199,15 +201,14 @@ ls
 
 #### only 6 samples (that passed binning) has .fasta output. So:
 
-    passed_folders="ERR2143758 ERR2143759 ERR2143767 ERR2143784 ERR2143785 ERR2143794 ERR2143795"
+    passed_folders="ERR2143759 ERR2143767 ERR2143784 ERR2143785 ERR2143794 ERR2143795"
 
     for folder in $passed_folders;do
         mkdir -p "$folder"/checkm_outputs
         checkm taxonomy_wf domain Bacteria -x fasta "$folder" "$folder"/checkm_outputs/
     done
 
-    # here, due to insufficinet memory, I have specified the marker at the domain level, specific only for bacteria
-    # also mentioned that binned files are in fasta format in folder: binned_files
+    # here, due to insufficinet memory, I have specified the marker at the domain level, specific only for bacteria also mentioned that binned files are in fasta format in folder: binned_files
     # the output will be saved in checkm_outputs
 
 
@@ -249,7 +250,8 @@ ls
     conda activate metaphlan
     conda install metaphlan -y
 
-    metaphlan --install --bowtie2db ../../../tools/tx_db
+    mkdir ../../tools/tx_db
+    metaphlan --install --bowtie2db ../../tools/tx_db
 
     cd .. && ls
     mkdir -p tx_assignment/trimmed_raw_files
