@@ -8,5 +8,5 @@ data/assembled_files
 data/binned_files
 data/checkm_outputs
 data/tx_assignment/trimmed_raw_files
-data/tx_assignment
+data/tx_assignment/*.bz2
 
