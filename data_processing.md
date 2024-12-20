@@ -151,7 +151,10 @@
     ls ERR*68_assembled
     
     # out of these many files, the contigs.fasta and scaffolds.fasta are the ones with assembly
+    
     # file with extension *.gfa holds information to visualize the assembly using programs like [Bandage](https://github.com/rrwick/Bandage)
+    
+    ls */*.gfa
 
 ## Metagenomic binning:
 
@@ -208,7 +211,7 @@
         checkm taxonomy_wf domain Bacteria -x fasta "$folder" "$folder"/checkm_outputs/
     done
 
-    # here, due to insufficinet memory, I have specified the marker at the domain level, specific only for bacteria also mentioned that binned files are in fasta format in folder: binned_files
+    # here, due to insufficinet memory, I have specified the marker at the domain level, specific only for bacteria; also mentioned that binned files are in fasta format in folder: binned_files
     # the output will be saved in checkm_outputs
 
 
@@ -249,6 +252,7 @@
     conda create -n metaphlan -y
     conda activate metaphlan
     conda install metaphlan -y
+    conda install -c bioconda hclust2 -y
 
     mkdir ../../tools/tx_db
     metaphlan --install --bowtie2db ../../tools/tx_db
@@ -256,13 +260,10 @@
     cd .. && ls
     mkdir -p tx_assignment/trimmed_raw_files
     cp trimmed_files/trimmed_*.fastq tx_assignment/trimmed_raw_files/
-    cd tx_assignment/trimmed_raw_files && ls
-    
-    cd .. && ls
-    
+        
 #### for loop for taxonomic assignment:
 
-    cd trimmed_raw_files
+    cd tx_assignment/trimmed_raw_files && ls
 
     for file in trimmed_*_1.fastq; do
         sample_id=$(basename "$file" _1.fastq | sed 's/trimmed_//')
@@ -272,16 +273,28 @@
         # echo "$file"
         # echo "$reverse_read"
     
-        metaphlan "$file","$reverse_read" --bowtie2db ../../../tools/tx_db/ --bowtie2out ../"$sample_id".bowtie2.bz2 --nproc 7 --input_type fastq -o ../"$sample_id"_profiled_metagenome.txt
+        metaphlan "$file","$reverse_read" --bowtie2db ../../../tools/tx_db/ --bowtie2out ../"$sample_id".bowtie2.bz2 --nproc 7 --input_type fastq -o ../"$sample_id"_profiled_metagenome.txt --biom ../"$sample_id".biom
     done
+    
+    # saving to results folder:
+    mkdir -p ../../../results/profiled_metagenome && cp ../*_profiled_metagenome.txt $_
+    mkdir -p ../../../results/biom_files && cp ../*.biom $_
 
-    cd ..
-
-    cat ERR*795_*.txt
-
+    
+### taxonomic assignment of contigs from binning (didn't find any microbial taxa in sample)
+    
+    ls ../../binned_files/*/*.00?.fasta
+    
+    for file in ../../binned_files/*/*.00?.fasta;do
+        sample_id=$(basename $file ".fasta")
+        echo $sample_id
+    done
+    
 ### Converting the output into taxonomy-based-profile:
-
-    mkdir tx_profile
+    metaphlan --help
+    
+    cd ..
+    mkdir -p tx_profile
 
     for file in *_metagenome.txt;do
         output_file=$(echo "$file" | sed s'/_profiled_metagenome/_gtdb/')
@@ -289,7 +302,10 @@
         echo "$file"
         sgb_to_gtdb_profile.py -i "$file" -o tx_profile/"$output_file"
     done
- 
+
+    head tx_profile/*_gtdb.txt
+    
+
 ### Interpreting the results:
 
     Here, unclassified sequences are discarded as the way code is set up.
@@ -308,6 +324,7 @@
     done
 
     ls krona_files
+    
     cat krona_files/ERR2143759_krona.txt
 
 ### Converting to graphical format (html)
@@ -321,13 +338,62 @@
         ktImportText "$file" -o "$output"
     done
 
-## saving the files in results folder:
+#### saving the files in results folder:
     
-    mkdir ../../../results/abundance_graphs && cp *.html $_
+    mkdir -p ../../../results/abundance_krona_files && cp ./* $_
     
-    mkdir ../../results
-    cp JP4D_krona.html ../../results
+## alpha diversity Calculation !!
 
-# Next Step ?
+    mkdir -p ../../diversity_calculation && cd $_
+    
+### Merging all taxonomic files into a single file:
 
-### alpha and beta Diversity Calculation !!
+    conda activate metaphlan
+
+    merge_metaphlan_tables.py ../tx_assignment/*_profiled_metagenome.txt > merged_abundance_table.txt
+    sed -i '2s/_metagenome//g' merged_abundance_table.txt
+    
+    chmod +x ../../scripts/calculate_diversity.R
+
+    mkdir alpha/
+    Rscript ../../scripts/calculate_diversity.R -f merged_abundance_table.txt -d alpha -m richness -o alpha
+    Rscript ../../scripts/calculate_diversity.R -f merged_abundance_table.txt -d alpha -m shannon -o alpha
+    Rscript ../../scripts/calculate_diversity.R -f merged_abundance_table.txt -d alpha -m simpson -o alpha
+
+## Beta Diversity Calculation:
+
+    mkdir beta
+    Rscript ../../scripts/calculate_diversity.R -f merged_abundance_table.txt -d beta -m bray-curtis -o beta
+
+    # saved input nwk file from : "https://github.com/biobakery/MetaPhlAn/blob/master/metaphlan/utils/mpa_vJan21_CHOCOPhlAnSGB_202103.nwk"
+
+    Rscript ../../scripts/calculate_diversity.R -f merged_abundance_table.txt -d beta -m unweighted-unifrac -t *.nwk -o beta
+
+    Rscript ../../scripts/calculate_diversity.R -f merged_abundance_table.txt -d beta -m weighted-unifrac -t *.nwk -o beta
+    
+    head beta/*.tsv
+
+## Heatmap visulaization:
+
+### manipulating the combined abundance file for heatmap :
+
+    head merged_abundance_table.txt
+
+    awk 'NR!=1 && NR!=3' merged_abundance_table.txt > modified_abundance_table.txt #delete first and third non-informative lines
+    head modified_abundance_table.txt
+ 
+    chmod +x ../../scripts/process_abundance.py
+    
+    ../../scripts/process_abundance.py
+
+    head updated_abundance_table.csv
+
+## Statistical Analysis on Diversity Metrices:
+
+
+## Interelation with genomic and ecological aspect:
+
+
+ 
+    
+    
