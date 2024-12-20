@@ -1,0 +1,24 @@
+#mpa_vJun23_CHOCOPhlAnSGB_202403
+clade_name	ERR2143758d	ERR2143759d	ERR2143767d	ERR2143768d	ERR2143784d	ERR2143785d	ERR2143794d	ERR2143795d
+UNCLASSIFIED	100.0	0.0	0.0	0.0	0.0	0.0	0.0	0.0
+k__Bacteria	0.0	100.0	100.0	100.0	100.0	100.0	100.0	100.0
+k__Bacteria|p__Bacteroidota	0.0	100.0	100.0	0.0	96.02616	100.0	85.22336	96.066
+k__Bacteria|p__Bacteroidota|c__CFGB45935	0.0	100.0	100.0	0.0	96.02616	100.0	85.22336	96.066
+k__Bacteria|p__Bacteroidota|c__CFGB45935|o__OFGB45935	0.0	100.0	100.0	0.0	96.02616	100.0	85.22336	96.066
+k__Bacteria|p__Bacteroidota|c__CFGB45935|o__OFGB45935|f__FGB45935	0.0	100.0	100.0	0.0	96.02616	100.0	85.22336	96.066
+k__Bacteria|p__Bacteroidota|c__CFGB45935|o__OFGB45935|f__FGB45935|g__GGB56609	0.0	100.0	100.0	0.0	96.02616	100.0	85.22336	96.066
+k__Bacteria|p__Bacteroidota|c__CFGB45935|o__OFGB45935|f__FGB45935|g__GGB56609|s__GGB56609_SGB78025	0.0	100.0	100.0	0.0	96.02616	100.0	85.22336	96.066
+k__Bacteria|p__Bacteroidota|c__CFGB45935|o__OFGB45935|f__FGB45935|g__GGB56609|s__GGB56609_SGB78025|t__SGB78025	0.0	100.0	100.0	0.0	96.02616	100.0	85.22336	96.066
+k__Bacteria|p__Proteobacteria	0.0	0.0	0.0	100.0	3.97384	0.0	14.77664	3.934
+k__Bacteria|p__Proteobacteria|c__Deltaproteobacteria	0.0	0.0	0.0	100.0	0.0	0.0	0.0	0.0
+k__Bacteria|p__Proteobacteria|c__Deltaproteobacteria|o__Desulfovibrionales	0.0	0.0	0.0	100.0	0.0	0.0	0.0	0.0
+k__Bacteria|p__Proteobacteria|c__Deltaproteobacteria|o__Desulfovibrionales|f__Desulfovibrionaceae	0.0	0.0	0.0	100.0	0.0	0.0	0.0	0.0
+k__Bacteria|p__Proteobacteria|c__Deltaproteobacteria|o__Desulfovibrionales|f__Desulfovibrionaceae|g__Desulfovibrio	0.0	0.0	0.0	100.0	0.0	0.0	0.0	0.0
+k__Bacteria|p__Proteobacteria|c__Deltaproteobacteria|o__Desulfovibrionales|f__Desulfovibrionaceae|g__Desulfovibrio|s__Desulfovibrio_subterraneus	0.0	0.0	0.0	100.0	0.0	0.0	0.0	0.0
+k__Bacteria|p__Proteobacteria|c__Deltaproteobacteria|o__Desulfovibrionales|f__Desulfovibrionaceae|g__Desulfovibrio|s__Desulfovibrio_subterraneus|t__SGB85556	0.0	0.0	0.0	100.0	0.0	0.0	0.0	0.0
+k__Bacteria|p__Proteobacteria|c__Alphaproteobacteria	0.0	0.0	0.0	0.0	3.97384	0.0	14.77664	3.934
+k__Bacteria|p__Proteobacteria|c__Alphaproteobacteria|o__Rhodobacterales	0.0	0.0	0.0	0.0	3.97384	0.0	14.77664	3.934
+k__Bacteria|p__Proteobacteria|c__Alphaproteobacteria|o__Rhodobacterales|f__Rhodobacteraceae	0.0	0.0	0.0	0.0	3.97384	0.0	14.77664	3.934
+k__Bacteria|p__Proteobacteria|c__Alphaproteobacteria|o__Rhodobacterales|f__Rhodobacteraceae|g__Phycocomes	0.0	0.0	0.0	0.0	3.97384	0.0	14.77664	3.934
+k__Bacteria|p__Proteobacteria|c__Alphaproteobacteria|o__Rhodobacterales|f__Rhodobacteraceae|g__Phycocomes|s__Phycocomes_zhengii	0.0	0.0	0.0	0.0	3.97384	0.0	14.77664	3.934
+k__Bacteria|p__Proteobacteria|c__Alphaproteobacteria|o__Rhodobacterales|f__Rhodobacteraceae|g__Phycocomes|s__Phycocomes_zhengii|t__SGB31485	0.0	0.0	0.0	0.0	3.97384	0.0	14.77664	3.934

@@ -1,0 +1,4 @@
+96.02616		Bacteria	Bacteroidota	CFGB45935	OFGB45935	FGB45935	GGB56609	GGB56609_SGB78025	2976	96.02616
+3.97384		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodobacterales	Rhodobacteraceae	Phycocomes	Phycocomes_zhengii	21224282112044553198928739782056810	3.97384
+96.02616		Bacteria	Bacteroidota	CFGB45935	OFGB45935	FGB45935	GGB56609	GGB56609_SGB78025	SGB78025	2976	96.02616
+3.97384		Bacteria	Proteobacteria	Alphaproteobacteria	Rhodobacterales	Rhodobacteraceae	Phycocomes	Phycocomes_zhengii	SGB31485	21224282112044553198928739782056810	3.97384

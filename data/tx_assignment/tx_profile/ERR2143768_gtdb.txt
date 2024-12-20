@@ -1,0 +1,9 @@
+#mpa_vJun23_CHOCOPhlAnSGB_202403
+#clade_name	relative_abundance
+d__Bacteria	100.0
+d__Bacteria;p__Desulfobacterota_I	100.0
+d__Bacteria;p__Desulfobacterota_I;c__Desulfovibrionia	100.0
+d__Bacteria;p__Desulfobacterota_I;c__Desulfovibrionia;o__Desulfovibrionales	100.0
+d__Bacteria;p__Desulfobacterota_I;c__Desulfovibrionia;o__Desulfovibrionales;f__Desulfovibrionaceae	100.0
+d__Bacteria;p__Desulfobacterota_I;c__Desulfovibrionia;o__Desulfovibrionales;f__Desulfovibrionaceae;g__Halodesulfovibrio	100.0
+d__Bacteria;p__Desulfobacterota_I;c__Desulfovibrionia;o__Desulfovibrionales;f__Desulfovibrionaceae;g__Halodesulfovibrio;s__Halodesulfovibrio subterraneus	100.0

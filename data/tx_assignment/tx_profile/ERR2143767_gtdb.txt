@@ -1,0 +1,9 @@
+#mpa_vJun23_CHOCOPhlAnSGB_202403
+#clade_name	relative_abundance
+d__Bacteria	100.0
+d__Bacteria;p__Bacteroidota	100.0
+d__Bacteria;p__Bacteroidota;c__Bacteroidia	100.0
+d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales	100.0
+d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales;f__Saprospiraceae	100.0
+d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales;f__Saprospiraceae;g__	100.0
+d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales;f__Saprospiraceae;g__;s__	100.0

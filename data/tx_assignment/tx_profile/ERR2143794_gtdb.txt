@@ -1,0 +1,15 @@
+#mpa_vJun23_CHOCOPhlAnSGB_202403
+#clade_name	relative_abundance
+d__Bacteria	100.0
+d__Bacteria;p__Bacteroidota	85.22336
+d__Bacteria;p__Proteobacteria	14.77664
+d__Bacteria;p__Bacteroidota;c__Bacteroidia	85.22336
+d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria	14.77664
+d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales	85.22336
+d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhodobacterales	14.77664
+d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales;f__Saprospiraceae	85.22336
+d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhodobacterales;f__Rhodobacteraceae	14.77664
+d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales;f__Saprospiraceae;g__	85.22336
+d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhodobacterales;f__Rhodobacteraceae;g__Fluviibacterium	14.77664
+d__Bacteria;p__Bacteroidota;c__Bacteroidia;o__Chitinophagales;f__Saprospiraceae;g__;s__	85.22336
+d__Bacteria;p__Proteobacteria;c__Alphaproteobacteria;o__Rhodobacterales;f__Rhodobacteraceae;g__Fluviibacterium;s__Fluviibacterium sp003254465	14.77664

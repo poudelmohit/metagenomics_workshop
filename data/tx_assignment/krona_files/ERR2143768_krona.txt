@@ -1,0 +1,2 @@
+100.0		Bacteria	Proteobacteria	Deltaproteobacteria	Desulfovibrionales	Desulfovibrionaceae	Desulfovibrio	Desulfovibrio_subterraneus	21224282212131151949248722718620	100.0
+100.0		Bacteria	Proteobacteria	Deltaproteobacteria	Desulfovibrionales	Desulfovibrionaceae	Desulfovibrio	Desulfovibrio_subterraneus	SGB85556	21224282212131151949248722718620	100.0
