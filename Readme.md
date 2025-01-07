@@ -1,5 +1,6 @@
-* I apologize, I had to move the contents of this project to [this repo](https://github.com/poudelmohit/env-metagenomics-analysis)*
-* You may also visit the [project website](https://poudelmohit.github.io/env-metagenomics-analysis/) for details.*
+*I apologize, I had to move the contents of this project to [this repo](https://github.com/poudelmohit/env-metagenomics-analysis)*
+  
+*You may also visit the [project website](https://poudelmohit.github.io/env-metagenomics-analysis/) for details.*
 
 
 # Metagenomic Analysis of Environmental Samples
